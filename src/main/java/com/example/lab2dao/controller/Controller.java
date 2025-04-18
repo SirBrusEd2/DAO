@@ -1,11 +1,20 @@
-package com.example.lab2dao;
+package com.example.lab2dao.controller;
 
+import com.example.lab2dao.dao.ExcelProductDaoImpl;
+import com.example.lab2dao.dao.PostgresProductDaoImpl;
+import com.example.lab2dao.dao.ProductDao;
+import com.example.lab2dao.dao.ProductDaoImpl;
+import com.example.lab2dao.model.Product;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * Контроллер для управления пользовательским интерфейсом приложения.
+ * Обеспечивает взаимодействие между UI-компонентами и логикой работы с данными.
+ */
 public class Controller {
     private ProductDao productDao;
     private final ObservableList<Product> productList = FXCollections.observableArrayList();
@@ -41,6 +50,17 @@ public class Controller {
     @FXML
     private RadioButton postgresRadio;
 
+    /**
+     * Инициализация UI-компонентов и начальной конфигурации.
+     * <p>
+     * Настраивает:
+     * <ul>
+     *     <li>Группу переключателей для выбора источника данных</li>
+     *     <li>Привязку колонок таблицы к свойствам объекта Product</li>
+     *     <li>Обработчики событий для выбора элементов таблицы и изменения источника данных</li>
+     * </ul>
+     * Вызывается автоматически после загрузки FXML-файла.
+     */
     @FXML
     public void initialize() {
         // Создаем ToggleGroup и связываем с RadioButton
@@ -83,23 +103,43 @@ public class Controller {
             refreshTable();
         });
     }
+
+    /**
+     * Обновляет данные в таблице, загружая актуальную информацию из текущего источника данных.
+     * Автоматически вызывается при изменении источника данных или выполнении операций CRUD.
+     */
     private void refreshTable() {
         productList.setAll(productDao.getAllProducts());
         productTable.setItems(productList);
     }
 
+    /**
+     * Заполняет текстовые поля данными выбранного продукта из таблицы.
+     * @param product выбранный продукт для отображения в полях ввода
+     */
     private void populateFields(Product product) {
         nameField.setText(product.getName());
         quantityField.setText(String.valueOf(product.getQuantity()));
         tagField.setText(product.getTag());
     }
 
+    /**
+     * Очищает текстовые поля ввода.
+     * Используется после добавления/обновления/удаления для подготовки к новому вводу.
+     */
     private void clearFields() {
         nameField.clear();
         quantityField.clear();
         tagField.clear();
     }
 
+    /**
+     * Обрабатывает событие добавления нового продукта.
+     * <p>
+     * Проверяет корректность ввода числового значения количества.
+     * Создает новый продукт с автоматической генерацией ID через DAO.
+     * @throws NumberFormatException если поле количества содержит нечисловое значение
+     */
     @FXML
     private void handleAdd() {
         try {
@@ -117,6 +157,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Обрабатывает событие обновления выбранного продукта.
+     * <p>
+     * Требует предварительного выбора элемента в таблице.
+     * Обновляет все поля продукта, включая ID из исходного объекта.
+     * @throws NumberFormatException если поле количества содержит нечисловое значение
+     */
     @FXML
     private void handleUpdate() {
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
@@ -136,6 +183,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Обрабатывает событие удаления выбранного продукта.
+     * Удаляет продукт по его ID из текущего источника данных.
+     */
     @FXML
     private void handleDelete() {
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
@@ -148,6 +199,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Отображает диалоговое окно с предупреждением.
+     * @param title   заголовок окна
+     * @param message текст сообщения для пользователя
+     */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
