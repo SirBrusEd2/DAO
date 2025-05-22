@@ -1,0 +1,127 @@
+@startuml
+class com.example.lab2dao.Product {
+  - IntegerProperty id
+  - StringProperty name
+  - IntegerProperty quantity
+  - StringProperty tag
+  + Product(int, String, int, String)
+  + getId(): int
+  + setId(int)
+  + getName(): String
+  + setName(String)
+  + getQuantity(): int
+  + setQuantity(int)
+  + getTag(): String
+  + setTag(String)
+  + idProperty(): IntegerProperty
+  + nameProperty(): StringProperty
+  + quantityProperty(): IntegerProperty
+  + tagProperty(): StringProperty
+}
+
+interface com.example.lab2dao.dao.ProductDao {
+  + addProduct(Product)
+  + updateProduct(Product)
+  + deleteProduct(int)
+  + getAllProducts(): List<Product>
+  + setDataSource(String)
+}
+
+class com.example.lab2dao.dao.ProductDaoImpl {
+  - List<Product> products
+  - int nextId
+  + addProduct(Product)
+  + updateProduct(Product)
+  + deleteProduct(int)
+  + getAllProducts(): List<Product>
+  + setDataSource(String)
+}
+
+class com.example.lab2dao.dao.ExcelProductDaoImpl {
+  - String filePath
+  + addProduct(Product)
+  + updateProduct(Product)
+  + deleteProduct(int)
+  + getAllProducts(): List<Product>
+  + setDataSource(String)
+  - saveAllProducts(List<Product>)
+}
+
+class com.example.lab2dao.dao.PostgresProductDaoImpl {
+  - Connection connection
+  + PostgresProductDaoImpl()
+  + addProduct(Product)
+  + updateProduct(Product)
+  + deleteProduct(int)
+  + getAllProducts(): List<Product>
+  + setDataSource(String)
+  - createTableIfNotExists()
+  - extractProductFromResultSet(ResultSet): Product
+  - setProductParameters(PreparedStatement, Product)
+  - updateProductIdFromGeneratedKeys(PreparedStatement, Product)
+  - showConnectionErrorAlert(SQLException)
+  - handleSQLException(SQLException)
+}
+
+class com.example.lab2dao.controller.Controller {
+  - ProductDao productDao
+  - ObservableList<Product> productList
+  - TableView<Product> productTable
+  - TableColumn<Product, Integer> idColumn
+  - TableColumn<Product, String> nameColumn
+  - TableColumn<Product, Integer> quantityColumn
+  - TableColumn<Product, String> tagColumn
+  - TextField nameField
+  - TextField quantityField
+  - TextField tagField
+  - Button addButton
+  - Button updateButton
+  - Button deleteButton
+  - ToggleGroup dataSourceToggle
+  - RadioButton memoryRadio
+  - RadioButton excelRadio
+  - RadioButton postgresRadio
+  + initialize()
+  - setupButtonTooltip(Button, String)
+  - refreshTable()
+  - populateFields(Product)
+  - clearFields()
+  + handleAdd()
+  + handleUpdate()
+  + handleDelete()
+  - showAlert(String, String)
+}
+
+class com.example.lab2dao.HelloApplication {
+  + start(Stage)
+  + main(String[])
+}
+
+com.example.lab2dao.dao.ProductDao <|.. com.example.lab2dao.dao.ProductDaoImpl
+com.example.lab2dao.dao.ProductDao <|.. com.example.lab2dao.dao.ExcelProductDaoImpl
+com.example.lab2dao.dao.ProductDao <|.. com.example.lab2dao.dao.PostgresProductDaoImpl
+
+com.example.lab2dao.Product --> com.example.lab2dao.controller.Controller
+com.example.lab2dao.dao.ProductDao --> com.example.lab2dao.controller.Controller
+com.example.lab2dao.controller.Controller --> com.example.lab2dao.HelloApplication
+
+note top of com.example.lab2dao.dao.ProductDaoImpl
+  In-memory реализация DAO
+  Хранит данные в ArrayList
+end note
+
+note top of com.example.lab2dao.dao.ExcelProductDaoImpl
+  Реализация для работы с Excel
+  Использует Apache POI
+end note
+
+note top of com.example.lab2dao.dao.PostgresProductDaoImpl
+  Реализация для PostgreSQL
+  Использует JDBC
+end note
+
+note top of com.example.lab2dao.controller.Controller
+  Управляет UI и взаимодействует
+  с DAO через интерфейс ProductDao
+end note
+@enduml
