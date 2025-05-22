@@ -38,8 +38,7 @@
 ## Архитектура
 
 ### Диаграмма классов
-![UML](https://github.com/user-attachments/assets/fbd716e7-e1ae-4ec5-a1df-2ba421ffc97d)
-
+![Use Case DAO](https://github.com/user-attachments/assets/62333641-86cb-4d69-959d-1c2b628b2ec0)
 ---
 
 ### Назначение пакетов
