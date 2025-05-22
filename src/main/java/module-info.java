@@ -16,4 +16,10 @@ module com.example.lab2dao {
 
     opens com.example.lab2dao to javafx.fxml;
     exports com.example.lab2dao;
+    exports com.example.lab2dao.controller;
+    opens com.example.lab2dao.controller to javafx.fxml;
+    exports com.example.lab2dao.dao;
+    opens com.example.lab2dao.dao to javafx.fxml;
+    exports com.example.lab2dao.model;
+    opens com.example.lab2dao.model to javafx.fxml;
 }
