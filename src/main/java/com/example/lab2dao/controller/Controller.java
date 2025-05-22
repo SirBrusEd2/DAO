@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 
 /**
  * Контроллер для управления пользовательским интерфейсом приложения.
@@ -58,6 +59,7 @@ public class Controller {
      *     <li>Группу переключателей для выбора источника данных</li>
      *     <li>Привязку колонок таблицы к свойствам объекта Product</li>
      *     <li>Обработчики событий для выбора элементов таблицы и изменения источника данных</li>
+     *     <li>Подсказки для кнопок с задержкой отображения</li>
      * </ul>
      * Вызывается автоматически после загрузки FXML-файла.
      */
@@ -67,10 +69,9 @@ public class Controller {
         ToggleGroup dataSourceToggle = new ToggleGroup();
         memoryRadio.setToggleGroup(dataSourceToggle);
         excelRadio.setToggleGroup(dataSourceToggle);
-        postgresRadio.setToggleGroup(dataSourceToggle); // Добавьте эту строку
-        memoryRadio.setSelected(true); // Выбираем по умолчанию "В памяти"
+        postgresRadio.setToggleGroup(dataSourceToggle);
+        memoryRadio.setSelected(true);
 
-        // Остальной код инициализации...
         productDao = new ProductDaoImpl();
 
         // Настройка колонок таблицы
@@ -97,11 +98,35 @@ public class Controller {
             } else if (newToggle == excelRadio) {
                 productDao = new ExcelProductDaoImpl();
                 productDao.setDataSource("products.xlsx");
-            } else if (newToggle == postgresRadio) { // Добавьте этот блок
+            } else if (newToggle == postgresRadio) {
                 productDao = new PostgresProductDaoImpl();
             }
             refreshTable();
         });
+
+        // Настройка подсказок для кнопок с задержкой 3 секунды
+        setupButtonTooltip(addButton, "Добавить новый товар в текущий источник данных");
+        setupButtonTooltip(updateButton, "Обновить выбранный товар");
+        setupButtonTooltip(deleteButton, "Удалить выбранный товар");
+    }
+
+    /**
+     * Настраивает Tooltip для кнопки с указанной задержкой отображения.
+     *
+     * @param button кнопка, для которой настраивается подсказка
+     * @param text текст подсказки, который будет отображаться пользователю
+     *
+     * <p>Особенности реализации:
+     * <ul>
+     *     <li>Создает новый экземпляр Tooltip с заданным текстом</li>
+     *     <li>Устанавливает задержку отображения в 3 секунды</li>
+     *     <li>Привязывает подсказку к указанной кнопке</li>
+     * </ul>
+     */
+    private void setupButtonTooltip(Button button, String text) {
+        Tooltip tooltip = new Tooltip(text);
+        tooltip.setShowDelay(Duration.seconds(3));
+        button.setTooltip(tooltip);
     }
 
     /**
@@ -115,7 +140,15 @@ public class Controller {
 
     /**
      * Заполняет текстовые поля данными выбранного продукта из таблицы.
+     *
      * @param product выбранный продукт для отображения в полях ввода
+     *
+     * <p>Заполняет следующие поля:
+     * <ul>
+     *     <li>Поле названия (nameField)</li>
+     *     <li>Поле количества (quantityField)</li>
+     *     <li>Поле метки (tagField)</li>
+     * </ul>
      */
     private void populateFields(Product product) {
         nameField.setText(product.getName());
@@ -138,7 +171,17 @@ public class Controller {
      * <p>
      * Проверяет корректность ввода числового значения количества.
      * Создает новый продукт с автоматической генерацией ID через DAO.
+     *
      * @throws NumberFormatException если поле количества содержит нечисловое значение
+     *
+     * <p>Логика работы:
+     * <ol>
+     *     <li>Проверяет валидность ввода количества</li>
+     *     <li>Создает новый объект Product</li>
+     *     <li>Добавляет продукт через DAO</li>
+     *     <li>Обновляет таблицу</li>
+     *     <li>Очищает поля ввода</li>
+     * </ol>
      */
     @FXML
     private void handleAdd() {
@@ -162,7 +205,18 @@ public class Controller {
      * <p>
      * Требует предварительного выбора элемента в таблице.
      * Обновляет все поля продукта, включая ID из исходного объекта.
+     *
      * @throws NumberFormatException если поле количества содержит нечисловое значение
+     *
+     * <p>Логика работы:
+     * <ol>
+     *     <li>Проверяет наличие выбранного продукта</li>
+     *     <li>Проверяет валидность ввода количества</li>
+     *     <li>Обновляет данные продукта</li>
+     *     <li>Сохраняет изменения через DAO</li>
+     *     <li>Обновляет таблицу</li>
+     *     <li>Очищает поля ввода</li>
+     * </ol>
      */
     @FXML
     private void handleUpdate() {
@@ -186,6 +240,14 @@ public class Controller {
     /**
      * Обрабатывает событие удаления выбранного продукта.
      * Удаляет продукт по его ID из текущего источника данных.
+     *
+     * <p>Логика работы:
+     * <ol>
+     *     <li>Проверяет наличие выбранного продукта</li>
+     *     <li>Удаляет продукт через DAO</li>
+     *     <li>Обновляет таблицу</li>
+     *     <li>Очищает поля ввода</li>
+     * </ol>
      */
     @FXML
     private void handleDelete() {
@@ -201,8 +263,16 @@ public class Controller {
 
     /**
      * Отображает диалоговое окно с предупреждением.
-     * @param title   заголовок окна
+     *
+     * @param title заголовок окна
      * @param message текст сообщения для пользователя
+     *
+     * <p>Особенности реализации:
+     * <ul>
+     *     <li>Использует Alert типа WARNING</li>
+     *     <li>Не содержит заголовка (headerText = null)</li>
+     *     <li>Блокирует взаимодействие с другими окнами до закрытия</li>
+     * </ul>
      */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
