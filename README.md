@@ -39,7 +39,7 @@
 
 ### Диаграмма классов
 
-![Use Case DAO.png](Use Case DAO.png)
+![img.png](../img.png)
 
 ---
 
