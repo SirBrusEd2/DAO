@@ -23,7 +23,7 @@
 ---
 
 ## Скриншот рабочего окна приложения
-![Приложение.jpg](../%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5.jpg)
+![Приложение](https://github.com/user-attachments/assets/d27db222-bd22-4f16-90d0-0c5d6702c137)
 ---
 
 ## Что отличает этот проект от похожих
@@ -38,8 +38,7 @@
 ## Архитектура
 
 ### Диаграмма классов
-
-![img.png](../img.png)
+![UML](https://github.com/user-attachments/assets/fbd716e7-e1ae-4ec5-a1df-2ba421ffc97d)
 
 ---
 
