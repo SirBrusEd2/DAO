@@ -63,6 +63,7 @@ public class HelloApplication extends Application {
      *     <li>Является точкой входа при запуске из IDE или исполняемого JAR-файла</li>
      * </ul>
      */
+
     public static void main(String[] args) {
         launch();
     }
