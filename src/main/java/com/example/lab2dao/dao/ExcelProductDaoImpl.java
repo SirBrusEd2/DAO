@@ -22,15 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelProductDaoImpl implements ProductDao {
-    private String filePath = "products.xlsx";
+    private final String filePath;
 
-    /**
-     * Устанавливает путь к Excel-файлу для работы с данными.
-     * @param source путь к файлу .xlsx
-     */
-    @Override
-    public void setDataSource(String source) {
-        this.filePath = source;
+    public ExcelProductDaoImpl(String filePath) {
+        this.filePath = filePath;
     }
 
     /**

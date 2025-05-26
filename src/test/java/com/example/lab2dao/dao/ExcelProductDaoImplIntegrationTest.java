@@ -16,8 +16,7 @@ class ExcelProductDaoImplIntegrationTest {
     void setup() {
         // Удаляем старый файл и создаем новый DAO перед КАЖДЫМ тестом
         new File(testFilePath).delete();
-        dao = new ExcelProductDaoImpl();
-        dao.setDataSource(testFilePath);
+        dao = new ExcelProductDaoImpl(testFilePath); // Используем конструктор с параметром
     }
 
     @Test
@@ -27,7 +26,7 @@ class ExcelProductDaoImplIntegrationTest {
 
         List<Product> products = dao.getAllProducts();
         assertFalse(products.isEmpty());
-        assertEquals("Test Chair", products.get(0).getName()); // Теперь будет корректно
+        assertEquals("Test Chair", products.get(0).getName());
     }
 
     @Test

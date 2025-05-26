@@ -96,10 +96,13 @@ public class Controller {
             if (newToggle == memoryRadio) {
                 productDao = new ProductDaoImpl();
             } else if (newToggle == excelRadio) {
-                productDao = new ExcelProductDaoImpl();
-                productDao.setDataSource("products.xlsx");
+                productDao = new ExcelProductDaoImpl("products.xlsx"); // Путь передаем в конструктор
             } else if (newToggle == postgresRadio) {
-                productDao = new PostgresProductDaoImpl();
+                productDao = new PostgresProductDaoImpl(
+                        "jdbc:postgresql://localhost:7777/dao",
+                        "postgres",
+                        "postgres"
+                );
             }
             refreshTable();
         });

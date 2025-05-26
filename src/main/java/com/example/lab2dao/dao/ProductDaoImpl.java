@@ -71,12 +71,4 @@ public class ProductDaoImpl implements ProductDao {
         return new ArrayList<>(products);
     }
 
-    /**
-     * Заглушка для совместимости с интерфейсом (не выполняет действий).
-     * @param source игнорируется в данной реализации
-     */
-    @Override
-    public void setDataSource(String source) {
-        // In-memory реализация не требует внешних источников данных
-    }
 }

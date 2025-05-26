@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostgresProductDaoImpl implements ProductDao {
-    private Connection connection;
+    private final Connection connection;
 
     /**
      * Создает соединение с PostgreSQL и инициализирует схему БД.
@@ -165,19 +165,15 @@ public class PostgresProductDaoImpl implements ProductDao {
         return products;
     }
 
-    /**
-     * Устанавливает источник данных для реализации DAO.
-     * @param source специфичный для реализации идентификатор источника данных
-     *
-     * <p>В текущей реализации:
-     * <ul>
-     *     <li>Не поддерживается (заглушка)</li>
-     *     <li>Может быть реализовано переключение на другую БД</li>
-     * </ul>
-     */
-    @Override
-    public void setDataSource(String source) {
-        // Реализация переключения БД может быть добавлена здесь
+    // Получаем параметры подключения через конструктор
+    public PostgresProductDaoImpl(String url, String user, String password) {
+        try {
+            this.connection = DriverManager.getConnection(url, user, password);
+            createTableIfNotExists();
+        } catch (SQLException e) {
+            showConnectionErrorAlert(e);
+            throw new RuntimeException("Failed to connect to PostgreSQL", e);
+        }
     }
 
     /**
