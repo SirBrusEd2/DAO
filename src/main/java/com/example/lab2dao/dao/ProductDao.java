@@ -54,10 +54,4 @@ public interface ProductDao {
      */
     List<Product> getAllProducts();
 
-    /**
-     * Устанавливает источник данных для реализации DAO.
-     * @param source специфичный для реализации идентификатор источника данных
-     *              (путь к файлу, URL БД, имя ресурса и т.д.)
-     */
-    void setDataSource(String source);
 }
