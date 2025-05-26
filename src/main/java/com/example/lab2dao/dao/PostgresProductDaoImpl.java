@@ -276,4 +276,7 @@ public class PostgresProductDaoImpl implements ProductDao {
     private void handleSQLException(SQLException e) {
         e.printStackTrace();
     }
+    public Connection getConnection() {
+        return connection;
+    }
 }
